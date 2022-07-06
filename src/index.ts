@@ -9,7 +9,7 @@ const fastifyServer = fastify({logger: true})
 await fastifyServer.register(awilixPlugin)
 await fastifyServer.register(autoLoader)
 
-fastifyServer.get('/', async (request, reply) => {
+fastifyServer.get('/', async () => {
 	console.log(nanoid().toString())
 	return {message: 'Hello World!'}
 })

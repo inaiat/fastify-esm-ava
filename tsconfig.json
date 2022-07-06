@@ -11,7 +11,6 @@
     "baseUrl": "src",
     "skipLibCheck": true,
     "strict": true,
-    "forceConsistentCasingInFileNames": true
   },
   "ts-node": {
     "swc": true

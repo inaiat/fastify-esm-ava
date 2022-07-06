@@ -23,9 +23,7 @@
   "devDependencies": {
     "@swc/core": "^1.2.210",
     "@swc/helpers": "^0.4.3",
-    "@tsconfig/esm": "^1.0.1",
     "@types/node": "^18.0.0",
-    "@types/tap": "^15.0.7",
     "ava": "^4.3.0",
     "nodemon": "^2.0.18",
     "pino-pretty": "^8.1.0",
