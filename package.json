@@ -5,9 +5,10 @@
   "export": "/.index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node --experimental-vm-modules dist",
+    "start": "node dist",
     "dev": "nodemon | pino-pretty --colorize",
-    "test": "xo && ava"
+    "test": "xo && ava",
+    "coverage": "c8 --all --src=./src ava"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,7 @@
     "@swc/helpers": "^0.4.3",
     "@types/node": "^18.0.0",
     "ava": "^4.3.0",
+    "c8": "^7.11.3",
     "nodemon": "^2.0.18",
     "pino-pretty": "^8.1.0",
     "regenerator-runtime": "^0.13.9",
@@ -52,12 +54,12 @@
   },
   "xo": {
     "semicolon": false,
-		"ignores": [
-			"documentation/examples/*"
-		],
-		"rules": {
+    "ignores": [
+      "documentation/examples/*"
+    ],
+    "rules": {
       "@typescript-eslint/naming-convention": "warn",
       "@typescript-eslint/no-implicit-any-catch": "warn"
-		}
-	}
+    }
+  }
 }

@@ -2,7 +2,7 @@
   "watch": ["src", "tsconfig.json", ".env"],
   "ext": "ts",
   "ignore": ["src/**/*.spec.ts"],
-  "exec": "ts-node --esm ./src/index.ts",
+  "exec": "ts-node --esm ./src",
   "env": {
     "NODE_DEBUG": 9229,
     "NODE_ENV": "development"
