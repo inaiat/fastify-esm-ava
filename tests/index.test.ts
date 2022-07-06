@@ -1,48 +1,59 @@
-import test from 'ava';
-import fastify from 'fastify';
-// import { autoLoader } from '../src/autoloader.js';
-import { fastifyServer } from "../src/index.js";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import {dirname, join} from 'node:path'
+import {fileURLToPath} from 'node:url'
+import fastify, {FastifyInstance} from 'fastify'
+import anyTest, {TestFn} from 'ava'
 import fastifyAutoload from '@fastify/autoload'
+import {diContainer, fastifyAwilixPlugin} from '@fastify/awilix/lib/classic/index.js'
+import {instance, mock, when} from 'strong-mock'
+import {asValue} from 'awilix'
+import {MyService} from '../src/my-service.js'
 
+const test = anyTest as TestFn<FastifyInstance>
 
+const myMockService = mock<MyService>()
 
-test('foo', async (t) => {
-	// t.teardown(async () => await fastifyServer.close());
-	const response = await fastifyServer.inject({
-		method: "get",
-		url: "/",
-	});
-
-	t.deepEqual(response.statusCode, 200);
-});
-
-test('bar', async (t) => {
-	// t.teardown(async () => await fastifyServer.close());
+test.beforeEach(async t => {
 	const app = fastify()
-	app.register(fastifyAutoload, {
-		dir: join(dirname(fileURLToPath(import.meta.url)), "../src/routes"),
+
+	diContainer.register({
+		myService: asValue(instance(myMockService)),
+	})
+
+	await app.register(fastifyAwilixPlugin, {
+		disposeOnClose: true,
+		disposeOnResponse: false,
+	})
+
+	await app.register(fastifyAutoload, {
+		dir: join(dirname(fileURLToPath(import.meta.url)), '../src/routes'),
 		forceESM: true,
-	  });
-  	const response = await app.inject({
-		method: "get",
-		url: "/test",
-	});
+	})
 
-	t.deepEqual(response.body, "test");
-});
+	t.context = app
+})
 
-// tap.test("one", async (t) => {
-//   t.teardown(async () => await fastifyServer.close());
-//   t.test("two", async (t) => {
-//     const response = await fastifyServer.inject({
-//       method: "get",
-//       url: "/",
-//     });
-//     t.equal(1, 1);
-//   });
-//   t.test("two", async (t) => {
-//     t.equal(1, 1);
-//   });
-// });
+test.afterEach(async t => {
+	await t.context.close()
+})
+
+test('foo test', async t => {
+	when(myMockService.printDateTime()).thenReturn('bla')
+
+	const response = await t.context.inject({
+		method: 'get',
+		url: '/test',
+	})
+
+	t.is(response.statusCode, 200)
+})
+
+test('bar', async t => {
+	when(myMockService.printDateTime()).thenReturn('test')
+
+	const response = await t.context.inject({
+		method: 'get',
+		url: '/test',
+	})
+
+	t.is(response.body, 'test')
+})

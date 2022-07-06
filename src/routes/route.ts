@@ -1,16 +1,12 @@
-import { FastifyPluginAsync } from "fastify";
-import { nanoid } from "nanoid";
+import {FastifyPluginAsync} from 'fastify'
 
 const subRoutes: FastifyPluginAsync = async (app, options) => {
+	const myService = app.diContainer.cradle.myService
 
-  const myService = app.diContainer.cradle.myService
+	app.get(
+		'/test',
+		async request => myService.printDateTime(),
+	)
+}
 
-  app.get(
-    "/test",
-    async (request) => {
-      console.log("XXXX", myService.printDateTime())
-      return myService.printDateTime();
-    }
-  );
-};
-export default subRoutes;
+export default subRoutes

@@ -1,25 +1,26 @@
-import fastify from "fastify";
-import { autoLoader } from "./autoloader.js";
-import { awilixPlugin } from "./awilix.js";
+import {exit} from 'node:process'
+import fastify from 'fastify'
+import {nanoid} from 'nanoid'
+import {autoLoader} from './autoloader.js'
+import awilixPlugin from './di.config.js'
 
-export const fastifyServer = fastify({ logger: true });
+const fastifyServer = fastify({logger: true})
 
-fastifyServer.register(awilixPlugin);
+await fastifyServer.register(awilixPlugin)
+await fastifyServer.register(autoLoader)
 
-fastifyServer.register(autoLoader);
-
-
-fastifyServer.get("/", async (request, reply) => {
-  return { message: "Hello World!" };
-});
+fastifyServer.get('/', async (request, reply) => {
+	console.log(nanoid().toString())
+	return {message: 'Hello World!'}
+})
 
 const start = async () => {
-  try {
-    await fastifyServer.listen({port: 3000});
-  } catch (error) {
-    fastifyServer.log.error(error);
-    process.exit(1);
-  }
-};
+	try {
+		await fastifyServer.listen({port: 3000})
+	} catch (error) {
+		fastifyServer.log.error(error)
+		exit(1)
+	}
+}
 
-start();
+void start()
